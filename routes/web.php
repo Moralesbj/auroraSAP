@@ -5,55 +5,39 @@ use App\Http\Controllers\PresupuestoController;
 use App\Http\Controllers\TransaccionController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\DashboardController;
 
-
-#Route::get('/', function () {
-#   return redirect()->route('/register');
-#});
-Route::middleware(['auth', 'role:admin'])->get('/admin', function () {
-    return view('admin.panel'); // Crea esta vista luego
-})->name('admin.panel');
-
-
-// Rutas compartidas para administradores y contadores
-Route::middleware(['auth', 'role:admin,contador'])->group(function () {
-    Route::get('/presupuestos', [PresupuestoController::class, 'index'])->name('presupuestos.index');
-    Route::get('/transacciones', [TransaccionController::class, 'index'])->name('transacciones.index');
-    Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+// Redirigir la página principal al login
+Route::get('/', function () {
+    return redirect()->route('login');
 });
 
+// Ruta principal al dashboard (vista principal después del login)
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
+// Rutas protegidas por autenticación
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
 
-    Route::get('/presupuestos', [PresupuestoController::class, 'index'])->name('presupuestos.index');
-    Route::get('/transacciones', [TransaccionController::class, 'index'])->name('transacciones.index');
-    Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
-    Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
-});
-
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/usuarios', [UsuarioController::class, 'index'])->name('admin.usuarios.index');
-    Route::post('/admin/usuarios/{usuario}/rol', [UsuarioController::class, 'actualizarRol'])->name('admin.usuarios.actualizarRol');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-require __DIR__ . '/auth.php';
-Route::get('/transacciones', function () {
-    return view('transacciones.index');
-})->middleware(['auth'])->name('transacciones.index');
-
-Route::middleware(['auth'])->group(function () {
-    Route::resource('transacciones', TransaccionController::class);
-});
-
-Route::middleware(['auth'])->group(function () {
+    // Rutas visibles para todos los usuarios autenticados
     Route::resource('presupuestos', PresupuestoController::class);
+    Route::resource('transacciones', TransaccionController::class);
+    Route::resource('reportes', ReporteController::class);
+
+    // Ruta para la gestión de usuarios (si aplica)
+    Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
+
+    // Rutas exclusivas para rol "admin"
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin', function () {
+            return view('admin.panel'); // Recuerda crear esta vista
+        })->name('admin.panel');
+
+        Route::get('/admin/usuarios', [UsuarioController::class, 'index'])->name('admin.usuarios.index');
+        Route::post('/admin/usuarios/{usuario}/rol', [UsuarioController::class, 'actualizarRol'])->name('admin.usuarios.actualizarRol');
+    });
 });
 
-Route::resource('reportes', App\Http\Controllers\ReporteController::class)->middleware(['auth']);
+// Rutas de autenticación (login, registro, etc.)
+require __DIR__ . '/auth.php';

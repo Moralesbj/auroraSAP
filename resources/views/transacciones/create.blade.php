@@ -24,18 +24,16 @@
             <input type="date" name="fecha" id="fecha" class="w-full border rounded px-3 py-2 mt-1" required>
         </div>
 
-        {{--<div class="mb-4">
+        <div class="mb-4">
             <label for="presupuesto_id" class="block text-sm font-semibold text-gray-600">Presupuesto</label>
             <select name="presupuesto_id" id="presupuesto_id" class="w-full border rounded px-3 py-2 mt-1" required>
                 @foreach($presupuestos as $presupuesto)
                     <option value="{{ $presupuesto->id }}">{{ $presupuesto->nombre }}</option>
                 @endforeach
             </select>
-        </div> --}}
-        <a href="{{ route('transacciones.create') }}" class="...">+ Nueva Transacción</a>
+        </div>
 
-
-       
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Guardar</button>
     </form>
 </div>
 @endsection

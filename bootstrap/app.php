@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\CheckRole; // 👈 Importamos tu middleware personalizado
+use App\Http\Middleware\CheckRole; // Importamos tu middleware personalizado
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Alias para usar middlewares por nombre en rutas
         $middleware->alias([
-            'role' => CheckRole::class, // 👈 Aquí registramos el alias "role"
+            'role' => CheckRole::class, // Aquí registramos el alias "role"
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

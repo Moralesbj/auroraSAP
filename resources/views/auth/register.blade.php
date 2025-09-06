@@ -5,13 +5,6 @@
 <!-- Campo de rol -->
  <!-- Rol -->
  
-                <div>
-                    <label for="role">Rol</label>
-                    <select name="role" id="role" class="block mt-1 w-full border rounded" required>
-                        <option value="contador">Contador</option>
-                        <option value="admin">Administrador</option>
-                    </select>
-                </div>
          <!-- Name -->
                 <div class="mt-4">
                     <label for="name">Name</label>
