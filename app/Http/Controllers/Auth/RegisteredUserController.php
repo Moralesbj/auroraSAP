@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -34,21 +33,20 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => 'required|in:admin,contador', // 👈 validación del rol
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role, // 👈 se asigna el rol
+            'role' => 'user',          // 👈 siempre "user"
+            'status' => 'pendiente',   // 👈 debe esperar aprobación
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
-        return redirect(RouteServiceProvider::HOME);
-
-        #return redirect('/dashboard');
+        // En lugar de loguear al usuario, lo devolvemos al login
+        return redirect()->route('login')
+            ->with('status', 'Usuario registrado con éxito. Debe esperar que el administrador lo apruebe.');
     }
 }

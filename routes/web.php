@@ -6,18 +6,37 @@ use App\Http\Controllers\TransaccionController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 // Redirigir la página principal al login
 Route::get('/', function () {
     return redirect()->route('login');
+    Route::get('/register', [RegisteredUserController::class, 'create'])
+    ->middleware('guest')
+    ->name('register');
+
+Route::post('/register', [RegisteredUserController::class, 'store'])
+    ->middleware('guest');
+
 });
 
 // Ruta principal al dashboard (vista principal después del login)
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+// Rutas para la gestión de usuarios, solo accesibles por administradores
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
+    Route::patch('/usuarios/{usuario}/aprobar', [UsuarioController::class, 'aprobar'])->name('usuarios.aprobar');
+    Route::patch('/usuarios/{usuario}/desactivar', [UsuarioController::class, 'desactivar'])->name('usuarios.desactivar');
+    Route::patch('/usuarios/{usuario}/reactivar', [UsuarioController::class, 'reactivar'])->name('usuarios.reactivar');
+});
+
 
 // Rutas protegidas por autenticación
+
+
 Route::middleware(['auth'])->group(function () {
 
     // Rutas visibles para todos los usuarios autenticados
