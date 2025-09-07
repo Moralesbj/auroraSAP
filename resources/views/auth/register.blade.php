@@ -1,50 +1,63 @@
-<x-guest-layout>
+{{-- resources/views/auth/register.blade.php --}}
+@extends('layouts.guest')
 
-<form method="POST" action="{{ route('register') }}">
+@section('content')
+    <h2 class="text-2xl font-bold mb-6 text-center text-indigo-700">Registrarse</h2>
+
+    {{-- Mostrar errores --}}
+    @if ($errors->any())
+        <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            <ul class="list-disc list-inside">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    {{-- Formulario de registro --}}
+    <form method="POST" action="{{ route('register') }}">
         @csrf
-<!-- Campo de rol -->
- <!-- Rol -->
- 
-         <!-- Name -->
-                <div class="mt-4">
-                    <label for="name">Name</label>
-                    <input id="name" class="block mt-1 w-full border rounded" type="text" name="name" required autofocus />
-                </div>
 
-                <!-- Email -->
-                <div class="mt-4">
-                    <label for="email">Email</label>
-                    <input id="email" class="block mt-1 w-full border rounded" type="email" name="email" required />
-                </div>
+        {{-- Nombre --}}
+        <div class="mb-4">
+            <label for="name" class="block text-gray-700 font-semibold">Nombre completo</label>
+            <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200">
+        </div>
 
-                <!-- Password -->
-                <div class="mt-4">
-                    <label for="password">Password</label>
-                    <input id="password" class="block mt-1 w-full border rounded" type="password" name="password" required autocomplete="new-password" />
-                </div>
+        {{-- Email --}}
+        <div class="mb-4">
+            <label for="email" class="block text-gray-700 font-semibold">Correo electrónico</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" required
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200">
+        </div>
 
-                <!-- Confirm Password -->
-                <div class="mt-4">
-                    <label for="password_confirmation">Confirm Password</label>
-                    <input id="password_confirmation" class="block mt-1 w-full border rounded" type="password" name="password_confirmation" required />
-                </div>
+        {{-- Contraseña --}}
+        <div class="mb-4">
+            <label for="password" class="block text-gray-700 font-semibold">Contraseña</label>
+            <input id="password" type="password" name="password" required
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200">
+        </div>
 
-        <div class="mt-4">
-            <x-input-error :messages="$errors->get('role')" class="mt-2" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        {{-- Confirmar contraseña --}}
+        <div class="mb-4">
+            <label for="password_confirmation" class="block text-gray-700 font-semibold">Confirmar contraseña</label>
+            <input id="password_confirmation" type="password" name="password_confirmation" required
+                   class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200">
+        </div>
 
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
+        {{-- Botón registrar + enlace login --}}
+        <div class="flex items-center justify-between">
+            <a class="text-sm text-indigo-600 hover:underline" href="{{ route('login') }}">
+                ¿Ya tienes cuenta?
             </a>
 
-            <x-primary-button class="ms-4" type="submit">
-                {{ __('Register') }}
-            </x-primary-button>
+            <button type="submit"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition">
+                Registrarse
+            </button>
         </div>
     </form>
-</x-guest-layout>
+@endsection
+ 
